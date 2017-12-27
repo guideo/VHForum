@@ -11,6 +11,7 @@ urlpatterns = [
 	path('', views.index, name='index'),
 	path('signup/', views.signup, name='signup'),
 	path('login/', views.login, name='login'),
+	path('addComment/', views.addComment, name='add comment'),
 	path('user/<str:user_login>/', views.user, name='user'),
 	path('logout/', logout, {'next_page': '/forum/'}, name='logout'),
 	path('<int:subsection_id>/<str:subsection_title>/', views.subsection, name='subsection'),

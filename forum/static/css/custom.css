@@ -1,3 +1,13 @@
+html{
+	height: 100%;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
 .headerText{
 	color: white;
 	font-size: 1.2em;
@@ -24,7 +34,6 @@
 
 .dropItem {
     cursor: pointer;
-	text-decoration: underline;
 }
 
 .dropContent {
@@ -55,6 +64,14 @@
 
 .dropDown:hover .dropItem {
     color: #3e8e41;
+}
+
+#userIcon{
+}
+
+#banner{
+	margin-top: 40px;
+	margin-bottom: 10px;
 }
 
 #forumBoard{
@@ -88,9 +105,77 @@
 	border-top-right-radius: 10px;
 }
 
-.post{
+.postItem{
 	width: 100%;
 	border: 2px solid blue;
 	padding-left: 10px;
 	margin-bottom: 5px;
+}
+
+#postBody{
+	margin-left: 20px;
+	margin-top: 50px;
+}
+
+#postName{
+	margin-left: 30px;
+	margin-bottom: 50px;
+}
+
+.post{
+	width: 100%;
+	overflow: auto;
+	position: relative;
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+	border-color: #909090;
+	margin-bottom: 10px;
+}
+
+.postUser{
+	padding: 10px;
+	width: 18%;
+	height: 100%;
+	position: absolute;
+	float: left;
+	border-right: 2px solid;
+	border-color: #909090;
+	background-color: #dfdfdf;
+}
+
+.postText{
+	padding: 10px;
+	width: 82%;
+	height: 100%;
+	float: right;
+	background-color: #efefef;
+}
+
+#newComment{
+	margin: auto;
+	display: block;
+	text-align: right;
+	width: 75%;
+}
+
+#newCommentText{
+	margin: auto;
+	width: 100%;
+	display: block;
+}
+
+#newCommentButton{
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+#baseFooter{
+	background-color: #343a40;
+	width: 100%;
+	margin-top: auto;
+	color: white;
+	padding: 10px;
+	text-align: center;
+	position: relative;
+    
 }

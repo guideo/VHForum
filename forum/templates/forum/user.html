@@ -1,6 +1,9 @@
 {% extends 'forum/base.html' %}
 
 {% block content %}
-{{ user }}
+{{ user.username }}
+{{ user.email }}
+{{ user.first_name }}
+{{ user.last_name }}
 <img src="/forum/{{ user.profile.user_image }}" alt="Smiley face" height="42" width="42">
 {% endblock %}

@@ -1,6 +1,62 @@
 {% extends 'forum/base.html' %}
+{% load static %}
 
 {% block content %}
-<h1>{{ post.post_title }}</h1>
-<h3>{{ post.post_text|linebreaks }}</h3>
+<div class="row">
+	<div class="col-lg-12 text-center">
+	{% if not user.is_authenticated %}
+		<h1 class="mt-5">Welcome to the VanHack Forum</h1>
+		<p class="lead">You are free to look around, but please register or sign in if you wish to start a discussion!</p>
+	{% else %}
+		<a href="/forum"><img id="banner" src="{% static 'images/VanHackBanner.jpg' %}" alt="Forum Banner"></a>
+	{% endif %}
+	</div>
+</div>
+<a href="/forum">VanHack Forum</a> > <a href="/forum/{{ post.post_subsection.id }}/{{ post.post_subsection }}">{{ post.post_subsection.subsection_section }} / {{ post.post_subsection }}</a>
+<div id="postBody">
+	<h1 id="postName">{{ post.post_title }}</h1>
+	<div class="post">
+		<div class="postUser">
+		{{ post.post_user }}
+		</div>
+		<div class="postText">
+			<h3>{{ post.post_text|linebreaks }}</h3>
+		</div>
+	</div>
+	{% for comment in post.comment_set.all %}
+	<div class="post">
+		<div class="postUser">
+		{{ comment.comment_user }}
+		</div>
+		<div class="postText">
+			<h3>{{ comment.comment_text|linebreaks }}</h3>
+		</div>
+	</div>
+	{% endfor %}
+	{% if user.is_authenticated %}
+	<div id="newComment">
+	<form method="post">
+	{% csrf_token %}
+		<textarea name="comment" id="newCommentText" rows="3" placeholder="Enter your comment here..."></textarea>
+		<button id="newCommentButton" type="submit" value="New Comment">Add Comment</button>
+	</form>
+	</div>
+	{% endif %}
+</div>
+
+<script>
+function loadFunc(){
+	posts = document.getElementsByClassName("post");
+	postTexts = document.getElementsByClassName("postText");
+	for(var i=0; i<posts.length; i++){
+		console.log(posts[i].style.height);
+		console.log(posts[i].style);
+		postTexts[i].style.height = posts[i].style.height;
+		console.log("running");
+	}
+	console.log("done");
+}
+loadFunc();
+</script>
+
 {% endblock %}

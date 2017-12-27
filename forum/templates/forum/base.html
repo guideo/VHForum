@@ -54,21 +54,18 @@
 			<a href="/forum/signup"><input id="signUpButton" class="headerButton btn btn-danger btn-sm" type="submit" value="Sign Up"></a>
 		  </li>
 		  {% else %}
-			<!--<div class="dropDown">
-				<span class="headerText">Welcome, <a href="#"><button id="headerUser">{{ user }}</button></a></span>
-				<div class="dropDown-content">
-					<a href="#">Link 1</a>
-					<a href="#">Link 2</a>
-				</div>
-			</div>-->
 			<span class="headerText">Welcome, </span>
-			<div class="dropDown"><a href="/forum/user/{{ user }}/"><span class="dropItem">{{ user }}</span></a>
+			<div class="dropDown">
+			<a href="/forum/user/{{ user }}/">
+			<span class="dropItem"><span style="text-decoration: underline;">{{ user }}</span>
+			<img id="userIcon" src="/forum/{{ user.profile.user_image }}" alt="User Icon" height="24" width="24">
+			</span>
+			</a>
 				<div class="dropContent">
 					<a href="/forum/user/{{ user }}/">User Account</a>
 					<a href="/forum/logout/">Sign Out</a>
 				</div>
 			</div>
-			<img src="/forum/{{ user.profile.user_image }}" alt="Smiley face" height="42" width="42">
 		  {% endif %}
           </ul>
         </div>
@@ -84,7 +81,13 @@
     <!-- Bootstrap core JavaScript -->
     <script src="{% static 'jquery/jquery.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+	
+	<div id="baseFooter">
+		<div class="container">
+			© 2017 Guilherme Deo
+		</div>
+	</div>
 
   </body>
-
+  
 </html>

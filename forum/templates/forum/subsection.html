@@ -1,17 +1,22 @@
 {% extends 'forum/base.html' %}
+{% load static %}
 
 {% block content %}
 	
       <div class="row">
         <div class="col-lg-12 text-center">
-          <h1 class="mt-5">Welcome to the VanHack Forum</h1>
-          <p class="lead">You are free to look around, but please register or sign in if you wish to start a discussion!</p>
+         {% if not user.is_authenticated %}
+			<h1 class="mt-5">Welcome to the VanHack Forum</h1>
+			<p class="lead">You are free to look around, but please register or sign in if you wish to start a discussion!</p>
+		{% else %}
+			<a href="/forum"><img id="banner" src="{% static 'images/VanHackBanner.jpg' %}" alt="Forum Banner"></a>
+		{% endif %}
         </div>
       </div>
 	
 	  <div id="forumBoard">
 	    {% for post in subsection.post_set.all %}
-			<div class="post">
+			<div class="postItem">
 				<a href="/forum/{{ subsection.id }}/{{ subsection.subsection_title }}/{{ post.id }}/{{ post.post_title }}">{{ post }}</a>
 			</div>
 		{% endfor %}
