@@ -62,12 +62,13 @@
 				</div>
 			</div>-->
 			<span class="headerText">Welcome, </span>
-			<div class="dropDown"><a href="user/"><span class="dropItem">{{ user }}</span></a>
+			<div class="dropDown"><a href="/forum/user/{{ user }}/"><span class="dropItem">{{ user }}</span></a>
 				<div class="dropContent">
-					<a href="user/">User Account</a>
-					<a href="logout/">Sign Out</a>
+					<a href="/forum/user/{{ user }}/">User Account</a>
+					<a href="/forum/logout/">Sign Out</a>
 				</div>
 			</div>
+			<img src="/forum/{{ user.profile.user_image }}" alt="Smiley face" height="42" width="42">
 		  {% endif %}
           </ul>
         </div>

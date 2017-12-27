@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+ENV_PATH = os.path.abspath(os.path.dirname(__file__))
+MEDIA_ROOT = os.path.join(os.path.dirname(ENV_PATH), "media/" )
+MEDIA_URL = "media/"
 
 # Application definition
 

@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.contrib.auth import login as auth_login, authenticate
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from .models import *
+from django.conf import settings
 
 from .forms import SignUpForm
 
@@ -11,7 +12,6 @@ def index(request):
 
 def subsection(request, subsection_id, subsection_title):
 	subsection = get_object_or_404(Subsection, id=subsection_id)
-	print(subsection.post_set.all())
 	return render(request, 'forum/subsection.html', {'subsection': subsection})
 
 def post(request, subsection_id, subsection_title, post_id, post_title):
@@ -41,8 +41,12 @@ def login(request):
 		auth_login(request, user)
 	return redirect('/forum')
 
-def user(request):
-	return
+def user(request, user_login):
+	print("################")
+	print(user_login)
+	current_user = get_object_or_404(User, username=user_login)
+	print(current_user.profile.user_image)
+	return render(request, 'forum/user.html', {'user': current_user})
 	#TODO
 
 #def kappa(request):

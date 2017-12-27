@@ -1,14 +1,20 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
-class User(models.Model):
-	def __str__(self):
-		return self.user_name
-	user_login		= models.CharField(primary_key = True, unique = True, max_length = 30)
-	user_pass		= models.CharField(max_length = 50)
-	user_email		= models.EmailField(unique = True, max_length = 200)
-	user_first_name		= models.CharField(max_length = 30)
-	user_last_name		= models.CharField(max_length = 100)
-	user_image		= models.ImageField(upload_to = 'users/images/', default = 'users/default/default_img.jpg')
+class Profile(models.Model):
+	user 			= models.OneToOneField(User, on_delete=models.CASCADE)
+	user_image		= models.ImageField(upload_to = 'media/users/images/', default = 'media/users/default/default_img.jpg')
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 class Post(models.Model):
 	def __str__(self):
@@ -18,7 +24,7 @@ class Post(models.Model):
 	post_views		= models.IntegerField(default = 0)
 	post_time		= models.DateTimeField(auto_now = True)
 	post_user		= models.ForeignKey(
-						'User',
+						User,
 						on_delete = models.CASCADE,
 	)
 	post_subsection	= models.ForeignKey(
@@ -31,7 +37,7 @@ class Comment(models.Model):
 	comment_time	= models.DateTimeField(auto_now = True)
 	comment_number	= models.IntegerField()
 	comment_user	= models.ForeignKey(
-						'User',
+						User,
 						on_delete = models.CASCADE,
 	)
 	comment_post	= models.ForeignKey(
