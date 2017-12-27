@@ -1,2 +1,6 @@
+{% extends 'forum/base.html' %}
+
+{% block content %}
 <h1>{{ post.post_title }}</h1>
 <h3>{{ post.post_text|linebreaks }}</h3>
+{% endblock %}

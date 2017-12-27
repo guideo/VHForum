@@ -6,8 +6,9 @@ class User(models.Model):
 	user_login		= models.CharField(primary_key = True, unique = True, max_length = 30)
 	user_pass		= models.CharField(max_length = 50)
 	user_email		= models.EmailField(unique = True, max_length = 200)
-	user_name		= models.CharField(max_length = 200)
-	user_image		= models.ImageField(upload_to = 'users/images/')
+	user_first_name		= models.CharField(max_length = 30)
+	user_last_name		= models.CharField(max_length = 100)
+	user_image		= models.ImageField(upload_to = 'users/images/', default = 'users/default/default_img.jpg')
 
 class Post(models.Model):
 	def __str__(self):
