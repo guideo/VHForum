@@ -36,6 +36,24 @@ def addComment(request, subsection_id, subsection_title, post_id, post_title):
 	else:
 		print("You must login in order to add a new comment!")
 	return redirect('/forum')
+	
+def newPost(request, subsection_id, subsection_title):
+	current_user = request.user
+	subsection = get_object_or_404(Subsection, id=subsection_id)
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			print("###POST###")
+			title = request.POST['title']
+			text = request.POST['text']
+			new_post = Post(post_title=title, post_text=text, post_user=current_user, post_subsection=subsection)
+			new_post.save()
+			new_post.refresh_from_db()
+			print(new_post)
+			#return redirect('forum/' + subsection_id + '/' + subsection_title + '/' + new_post.id + '/' + new_post.title + '/')
+			return render(request, 'forum/post.html', {'post': new_post})
+	else:
+		print("You must login in order to add a new comment!")
+	return render(request, 'forum/newPost.html', {'subsection': subsection})
 
 def signup(request):
 	if request.method == 'POST':

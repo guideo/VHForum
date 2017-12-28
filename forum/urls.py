@@ -15,6 +15,7 @@ urlpatterns = [
 	path('user/<str:user_login>/', views.user, name='user'),
 	path('logout/', logout, {'next_page': '/forum/'}, name='logout'),
 	path('<int:subsection_id>/<str:subsection_title>/', views.subsection, name='subsection'),
+	path('<int:subsection_id>/<str:subsection_title>/newPost/', views.newPost, name='add new discussion'),
 	path('<int:subsection_id>/<str:subsection_title>/<int:post_id>/<str:post_title>/', views.post, name='post'),
 ]
 

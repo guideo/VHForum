@@ -177,5 +177,60 @@ body {
 	padding: 10px;
 	text-align: center;
 	position: relative;
-    
+}
+
+#subsectionHeader{
+	position: relative;
+	margin-top: 20px;
+	padding-left: 20px;
+	margin-bottom: 30px;
+}
+
+#subsectionName{
+}
+
+#newPostButton{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	display: inline;
+}
+
+#newPostFormDiv{
+	position: relative;
+	margin-top: 50px;
+	text-align: center;
+}
+
+#newPostFormTitle{
+	display: inline-block;
+	width: 80%;
+	font-size: 1.5em;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#newPostFormHelpText{
+	display: inline-block;
+	text-align: left;
+	padding-left: 30px;
+	width: 80%;
+	margin-bottom: 10px;
+	color: #999999;
+}
+
+#newPostFormText{
+	display: inline-block;
+	padding: 10px;
+	width: 80%;
+}
+
+#newPostFormButton{
+	display: block;
+	position: absolute;
+	right: 10%;
+}
+
+#signUpFormDiv{
+	margin-top: 50px;
 }

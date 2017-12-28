@@ -3,22 +3,29 @@
 
 {% block content %}
 	
-      <div class="row">
-        <div class="col-lg-12 text-center">
-         {% if not user.is_authenticated %}
+	<div class="row">
+		<div class="col-lg-12 text-center">
+		 {% if not user.is_authenticated %}
 			<h1 class="mt-5">Welcome to the VanHack Forum</h1>
 			<p class="lead">You are free to look around, but please register or sign in if you wish to start a discussion!</p>
 		{% else %}
 			<a href="/forum"><img id="banner" src="{% static 'images/VanHackBanner.jpg' %}" alt="Forum Banner"></a>
 		{% endif %}
-        </div>
-      </div>
+		</div>
+	</div>
 	
-	  <div id="forumBoard">
-	    {% for post in subsection.post_set.all %}
-			<div class="postItem">
-				<a href="/forum/{{ subsection.id }}/{{ subsection.subsection_title }}/{{ post.id }}/{{ post.post_title }}">{{ post }}</a>
-			</div>
-		{% endfor %}
-	  </div>
+	{% if user.is_authenticated %}
+	<div id="subsectionHeader">
+		<h1 id="subsectionName">{{ subsection.subsection_title }}</h1>
+		<a href="newPost/"><button id="newPostButton" type="submit" value="New Comment">Start New Discussion</button></a>
+	</div>
+	{% endif %}
+
+	<div id="forumBoard">
+	{% for post in subsection.post_set.all %}
+		<div class="postItem">
+			<a href="/forum/{{ subsection.id }}/{{ subsection.subsection_title }}/{{ post.id }}/{{ post.post_title }}">{{ post }}</a>
+		</div>
+	{% endfor %}
+	</div>
 {% endblock %}

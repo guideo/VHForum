@@ -1,0 +1,15 @@
+{% extends 'forum/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+	<div id="newPostFormDiv">
+	<form method="post">
+	{% csrf_token %}
+		<input id="newPostFormTitle" name="title" type="text" placeholder="Enter the discussion title"></input>
+		<div id="newPostFormHelpText">This will be post under: {{ subsection.subsection_section }} > {{ subsection }}</div>
+		<textarea id="newPostFormText" name="text" rows="7" cols="100" placeholder="Enter the discussion text"></textarea>
+		<button id="newPostFormButton" type="submit" value="New Post">Start Discussion</button>
+	</form>
+	</div>
+{% endif %}
+{% endblock %}
