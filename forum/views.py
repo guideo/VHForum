@@ -39,12 +39,19 @@ def addComment(request, subsection_id, subsection_title, post_id, post_title):
 
 def signup(request):
 	if request.method == 'POST':
-		form = SignUpForm(request.POST, request.FILES)
+		form = SignUpForm(request.POST)
 		if form.is_valid():
-			form.save()
+			try:
+				user_image_upload = request.FILES['image']
+				user = form.save()
+				user.refresh_from_db()
+				user.profile.user_image = user_image_upload
+				user.save()
+			except:
+				print("user didn't chose picture, using default")
+				form.save()
 			username = form.cleaned_data.get('username')
 			raw_password = form.cleaned_data.get('password1')
-			user_img = form.cleaned_data.get('image')
 			user = authenticate(username=username, password=raw_password)
 			auth_login(request, user)
 			return redirect('/forum')

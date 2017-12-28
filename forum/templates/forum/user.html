@@ -2,8 +2,9 @@
 
 {% block content %}
 {{ user.username }}
+{{ user.profile.user_image }}
 {{ user.email }}
 {{ user.first_name }}
 {{ user.last_name }}
-<img src="/forum/{{ user.profile.user_image }}" alt="Smiley face" height="42" width="42">
+<img src="/forum/media/{{ user.profile.user_image }}" alt="Smiley face" height="42" width="42">
 {% endblock %}
