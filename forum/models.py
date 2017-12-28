@@ -25,7 +25,8 @@ class Post(models.Model):
 	post_time		= models.DateTimeField(auto_now = True)
 	post_user		= models.ForeignKey(
 						User,
-						on_delete = models.CASCADE,
+						on_delete = models.SET_NULL,
+						null=True,
 	)
 	post_subsection	= models.ForeignKey(
 						'Subsection',
@@ -38,7 +39,8 @@ class Comment(models.Model):
 	comment_number	= models.IntegerField()
 	comment_user	= models.ForeignKey(
 						User,
-						on_delete = models.CASCADE,
+						on_delete = models.SET_NULL,
+						null=True,
 	)
 	comment_post	= models.ForeignKey(
 						'Post',
