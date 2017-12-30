@@ -1,9 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login as auth_login, authenticate
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from .models import *
 from django.conf import settings
 from datetime import datetime
+import os
 
 from .forms import SignUpForm
 
@@ -17,7 +18,10 @@ def subsection(request, subsection_id, subsection_title):
 
 def post(request, subsection_id, subsection_title, post_id, post_title):
 	post = get_object_or_404(Post, id=post_id)
-	addComment(request, subsection_id, subsection_title, post_id, post_title)
+	if request.POST.get("newCommentButton"):
+		return addComment(request, subsection_id, subsection_title, post_id, post_title)
+	if request.POST.get("confirmButton"):
+		return editComment(request, subsection_id, subsection_title, post_id, post_title)
 	return render(request, 'forum/post.html', {'post': post})
 	
 def addComment(request, subsection_id, subsection_title, post_id, post_title):
@@ -25,34 +29,53 @@ def addComment(request, subsection_id, subsection_title, post_id, post_title):
 	post = get_object_or_404(Post, id=post_id)
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			print("###COMMENT###")
 			comment = request.POST['comment']
-			if len(comment) > 5:
-				new_comment = Comment(comment_text=comment, comment_time=datetime.now(), comment_number=len(post.comment_set.all())+1,
-				comment_user=current_user, comment_post=post)
-				new_comment.save()
-				print(new_comment)
-			return redirect('forum/post.html', {'post': post})
+			new_comment = Comment(comment_text=comment, comment_time=datetime.now(), comment_number=len(post.comment_set.all())+1,
+			comment_user=current_user, comment_post=post)
+			new_comment.save()
+			return HttpResponseRedirect('/forum/' + str(subsection_id) + '/' + subsection_title + '/' + str(post_id) + '/' + post_title + '/')
 	else:
 		print("You must login in order to add a new comment!")
-	return redirect('/forum')
+	return HttpResponseRedirect('/forum')
+	
+def editComment(request, subsection_id, subsection_title, post_id, post_title):
+	if request.method == 'POST':
+		if request.POST['type'] == 'comment':
+			comment = get_object_or_404(Comment, id=request.POST['commentID'])
+			comment.comment_text = request.POST['newText']
+			comment.save()
+		else:
+			post = get_object_or_404(Post, id=request.POST['commentID'])
+			post.post_text = request.POST['newText']
+			post.save()
+	return HttpResponseRedirect('/forum/' + str(subsection_id) + '/' + subsection_title + '/' + str(post_id) + '/' + post_title + '/')
+
+def deleteComment(request, subsection_id, subsection_title, post_id, post_title):
+	print(request.POST)
+	if request.method == 'POST':
+		if request.POST['type'] == 'comment':
+			comment = get_object_or_404(Comment, id=request.POST['commentID'])
+			comment.delete()
+			return HttpResponseRedirect('/forum/' + str(subsection_id) + '/' + subsection_title + '/' + str(post_id) + '/' + post_title + '/')
+		else:
+			post = get_object_or_404(Post, id=request.POST['commentID'])
+			post.delete()
+			return HttpResponseRedirect('/forum/' + str(subsection_id) + '/' + subsection_title + '/')
+	return HttpResponseRedirect('/forum/')
 	
 def newPost(request, subsection_id, subsection_title):
 	current_user = request.user
 	subsection = get_object_or_404(Subsection, id=subsection_id)
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			print("###POST###")
 			title = request.POST['title']
 			text = request.POST['text']
 			new_post = Post(post_title=title, post_text=text, post_user=current_user, post_subsection=subsection)
 			new_post.save()
 			new_post.refresh_from_db()
-			print(new_post)
-			#return redirect('forum/' + subsection_id + '/' + subsection_title + '/' + new_post.id + '/' + new_post.title + '/')
-			return render(request, 'forum/post.html', {'post': new_post})
+			return redirect('/forum/' + str(subsection_id) + '/' + subsection_title + '/' + str(new_post.id) + '/' + new_post.post_title + '/')
 	else:
-		print("You must login in order to add a new comment!")
+		print("You must login in order to create a new post!")
 	return render(request, 'forum/newPost.html', {'subsection': subsection})
 
 def signup(request):
@@ -86,12 +109,12 @@ def login(request):
 	return redirect('/forum')
 
 def user(request, user_login):
-	print("################")
-	print(user_login)
 	current_user = get_object_or_404(User, username=user_login)
-	print(current_user.profile.user_image)
+	if request.method == 'POST':
+		user_image_upload = request.FILES['image']
+		if os.path.isfile(settings.MEDIA_ROOT+"/"+str(current_user.profile.user_image)):
+			os.remove(settings.MEDIA_ROOT+"/"+str(current_user.profile.user_image))
+		current_user.profile.user_image = user_image_upload
+		current_user.save()
 	return render(request, 'forum/user.html', {'user': current_user})
-	#TODO
 
-#def kappa(request):
-#	return render(request, 'download/index.html')

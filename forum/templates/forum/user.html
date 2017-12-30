@@ -1,10 +1,26 @@
 {% extends 'forum/base.html' %}
 
 {% block content %}
-{{ user.username }}
-{{ user.profile.user_image }}
-{{ user.email }}
-{{ user.first_name }}
-{{ user.last_name }}
-<img src="/forum/media/{{ user.profile.user_image }}" alt="Smiley face" height="42" width="42">
+<div id="userPageDiv">
+	<div id="userPageImage">
+		<form id="uploadForm" method="post" enctype="multipart/form-data" action="/forum/user/{{ user }}/">
+		{%csrf_token%}
+			<img src="/forum/media/{{ user.profile.user_image }}" alt="Smiley face" height="100" width="100">
+			<input type="file" name="image" id="imgUpload" style="display:none;" onchange="submit()"/> 
+			<input type="button" onclick="uploadImage()" id="editImage" value="Edit Image" style="display: block; margin: auto; margin-top: 20px;" />
+		</form>
+	</div>
+	<div id="userPageInfo">
+		<b>Username:</b> {{ user.username }}<br>
+		<b>E-Mail:</b> {{ user.email }}<br>
+		<b>First Name:</b> {{ user.first_name }}<br>
+		<b>Last Name:</b> {{ user.last_name }}<br>
+	</div>
+</div>
+
+<script>
+function uploadImage(){
+	document.getElementById("imgUpload").click();
+}
+</script>
 {% endblock %}

@@ -151,6 +151,19 @@ body {
 	background-color: #efefef;
 }
 
+.editDiv{
+	float: right;
+}
+
+.editDiv i{
+	opacity: 0.3;
+	margin-right: 10px;
+}
+
+.editDiv i:hover{
+	opacity: 1;
+}
+
 #newComment{
 	margin: auto;
 	display: block;
@@ -233,4 +246,19 @@ body {
 
 #signUpFormDiv{
 	margin-top: 50px;
+}
+
+#userPageDiv{
+	margin-top: 100px;
+	padding-left: 150px;
+}
+
+#userPageImage{
+	float: left;
+	margin-right: 20px;
+}
+
+#userPageInfo{
+	float: left;
+	font-size: 1.2em;
 }

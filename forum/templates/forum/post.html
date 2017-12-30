@@ -19,8 +19,14 @@
 		<div class="postUser">
 		{{ post.post_user }}
 		</div>
-		<div class="postText">
-			<h3>{{ post.post_text|linebreaks }}</h3>
+		<div class="postText post{{ post.id }}">
+			<h3 class="post{{ post.id }}">{{ post.post_text|linebreaks }}</h3>
+			{% if user == post.post_user %}
+			<div class="editDiv">
+				<i class="fa fa-pencil-square-o" onclick="editComment('post{{ post.id }}', '{{ post.id }}', 'post')" aria-hidden="true"></i>
+				<i class="fa fa-trash-o" name="deleteButton" onclick="confirmDeletion('{{ post.id }}', 'post')" aria-hidden="true"></i>
+			</div>
+			{% endif %}
 		</div>
 	</div>
 	{% for comment in post.comment_set.all %}
@@ -28,8 +34,14 @@
 		<div class="postUser">
 		{{ comment.comment_user }}
 		</div>
-		<div class="postText">
-			<h3>{{ comment.comment_text|linebreaks }}</h3>
+		<div class="postText comment{{ forloop.counter }}">
+			<h3 class="comment{{ forloop.counter }}">{{ comment.comment_text|linebreaks }}</h3>
+			{% if user == comment.comment_user %}
+			<div class="editDiv">
+				<i class="fa fa-pencil-square-o" onclick="editComment('comment{{ forloop.counter }}', '{{ comment.id }}', 'comment')" aria-hidden="true"></i>
+				<i class="fa fa-trash-o" name="deleteButton" onclick="confirmDeletion('{{ comment.id }}', 'comment')" aria-hidden="true"></i>
+			</div>
+			{% endif %}
 		</div>
 	</div>
 	{% endfor %}
@@ -38,25 +50,88 @@
 	<form method="post">
 	{% csrf_token %}
 		<textarea name="comment" id="newCommentText" rows="3" placeholder="Enter your comment here..."></textarea>
-		<button id="newCommentButton" type="submit" value="New Comment">Add Comment</button>
+		<button name="newCommentButton" id="newCommentButton" type="submit" value="New Comment">Add Comment</button>
 	</form>
 	</div>
 	{% endif %}
 </div>
 
 <script>
-function loadFunc(){
-	posts = document.getElementsByClassName("post");
-	postTexts = document.getElementsByClassName("postText");
-	for(var i=0; i<posts.length; i++){
-		console.log(posts[i].style.height);
-		console.log(posts[i].style);
-		postTexts[i].style.height = posts[i].style.height;
-		console.log("running");
+
+function editComment(comment, commentID, postOrComment){
+	var commentDiv = document.getElementsByClassName(comment)[0];
+	var comment_text = document.getElementsByClassName(comment)[1];
+	var old_text = comment_text.textContent;
+
+	var input = document.createElement("textarea");
+	console.log(old_text);
+	commentDiv.innerHTML = "";
+	input.innerHTML = old_text;
+	input.cols = "100";
+	input.rows = "4";
+	commentDiv.appendChild(input);
+	
+	var buttonDiv = document.createElement("div");
+	
+	var confirmButton = document.createElement("button");
+	confirmButton.innerHTML = "Confirm";
+	confirmButton.style.marginRight = "10px";
+	confirmButton.name = "confirmButton";
+	confirmButton.onclick = function(){
+		var http = new XMLHttpRequest();
+
+		http.open('POST', 'editComment/');
+		http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		var csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+		http.setRequestHeader("X-CSRFToken", csrftoken);
+		http.onreadystatechange = function() {
+			if(http.readyState == 4 && http.status == 200) {
+				location.reload();
+			}
+		}
+		var data = 'newText=' + window.encodeURIComponent(input.value)
+		+ '&commentID=' + window.encodeURIComponent(commentID);
+		data = data + "&type=" + ((postOrComment == "comment") ? "comment" : "post");
+		http.send(data);
 	}
-	console.log("done");
+	
+	var cancelButton = document.createElement("button");
+	cancelButton.innerHTML = "Cancel";
+	cancelButton.onclick = function(){
+		location.reload();
+	}
+	
+	buttonDiv.appendChild(confirmButton);
+	buttonDiv.appendChild(cancelButton);
+	commentDiv.appendChild(buttonDiv);
 }
-loadFunc();
+
+function confirmDeletion(commentID, postOrComment){
+    var choice = confirm("Are you sure you want to delete this comment?\nThis action can't be undone.");
+    if (choice == true) {
+        var http = new XMLHttpRequest();
+
+		http.open('POST', 'deleteComment/');
+		http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		var csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+		http.setRequestHeader("X-CSRFToken", csrftoken);
+		http.onreadystatechange = function() {
+			if(http.readyState == 4 && http.status == 200) {
+				if (postOrComment == "comment"){
+					console.log("comment deleted");
+					location.reload();
+				}else{
+					console.log("post deleted");
+					location.reload();
+					window.location.href = "/forum/" + {{ post.post_subsection.id }} + "/" + {{ post.post_subsection.subsection_name }} + "/";
+				}
+			}
+		}
+		var data = 'commentID=' + window.encodeURIComponent(commentID);
+		data = data + "&type=" + ((postOrComment == "comment") ? "comment" : "post");
+		http.send(data);
+	}
+}
 </script>
 
 {% endblock %}
